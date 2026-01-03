@@ -1,0 +1,214 @@
+import React, { useState, useEffect } from "react";
+import "./home.css";
+
+const IslamicHome = () => {
+  const [currentTime, setCurrentTime] = useState("");
+  const [activeTab, setActiveTab] = useState("home");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      setCurrentTime(timeString);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="islamic-lifestyle-app">
+      {/* Header Section */}
+      <header className="app-header">
+        <div className="stars-container">
+          {/* Multiple stars with different sizes and animation delays */}
+          <div className="star star-1"></div>
+          <div className="star star-2"></div>
+          <div className="star star-3"></div>
+          <div className="star star-4"></div>
+          <div className="star star-5"></div>
+          <div className="star star-6"></div>
+          <div className="star star-7"></div>
+          <div className="star star-8"></div>
+          <div className="star star-9"></div>
+          <div className="star star-10"></div>
+        </div>
+
+        <div className="header-content">
+          <h1 className="app-title">Islamic Divine</h1>
+
+          <div className="prayer-indicator">
+            <span className="prayer-label">Next Prayer:</span>
+            <span className="prayer-name">Asr</span>
+            <span className="prayer-time">04:30 PM</span>
+          </div>
+
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1767449652/1000052349-removebg-preview_pt4t97_x0z25s.png"
+            alt="Islamic Divine"
+            className="home-banner-img"
+          />
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="main-content">
+        {/* Prayer Card */}
+        <div className="card prayer-card">
+          <div className="card-header">
+            <span className="card-icon">🕌</span>
+            <div className="card-title-group">
+              <h2 className="card-title">for Daily Prayers</h2>
+              <p className="card-subtitle">
+                5 daily prayers with accurate timings
+              </p>
+            </div>
+            <span className="card-arrow">→</span>
+          </div>
+        </div>
+
+        {/* Qibla Compass Card */}
+        <div className="card qibla-card">
+          <div className="card-header">
+            <span className="card-icon">🧭</span>
+            <div className="card-title-group">
+              <h2 className="card-title">Qibla Compass</h2>
+              <p className="card-subtitle">Find prayer direction accurately</p>
+            </div>
+            <span className="card-arrow">→</span>
+          </div>
+          <div className="location-display">
+            <span className="location-icon">📍</span>
+            <span className="location-text">Rajshahi, Bangladesh</span>
+          </div>
+        </div>
+
+        {/* AI Quran Card */}
+        <div className="card quran-card">
+          <div className="card-header">
+            <span className="card-icon">📖</span>
+            <div className="card-title-group">
+              <h2 className="card-title">AI-Quran</h2>
+              <p className="card-subtitle">Smart recitation & translation</p>
+            </div>
+            <span className="card-arrow">→</span>
+          </div>
+        </div>
+
+        {/* Namaz Timings Card */}
+        <div className="card namaz-card">
+          <div className="card-header">
+            <span className="card-icon">🕋</span>
+            <div className="card-title-group">
+              <h2 className="card-title">Namaz Timings</h2>
+              <p className="card-subtitle">Today's prayer schedule</p>
+            </div>
+            <span className="card-arrow">→</span>
+          </div>
+          <div className="prayer-times">
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Fajr</span>
+              <span className="prayer-time-small">04:30 AM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Dhuhr</span>
+              <span className="prayer-time-small">12:15 PM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Asr</span>
+              <span className="prayer-time-small">04:30 PM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Maghrib</span>
+              <span className="prayer-time-small">06:45 PM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Isha</span>
+              <span className="prayer-time-small">08:00 PM</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Time & Location Section */}
+        <div className="time-location-section">
+          <div className="time-display">
+            <span className="time-icon">🕒</span>
+            <div className="time-content">
+              <span className="current-time">{currentTime}</span>
+              <span className="time-label">Current Time</span>
+            </div>
+          </div>
+          <div className="hijri-date">
+            <span className="hijri-icon">🌙</span>
+            <span className="hijri-text">15 Ramadan 1445</span>
+          </div>
+        </div>
+      </main>
+
+      {/* Bottom Navigation */}
+      <nav className="bottom-nav">
+        <div className="nav-container">
+          <button
+            className={`nav-item ${activeTab === "home" ? "active" : ""}`}
+            onClick={() => setActiveTab("home")}
+          >
+            <span className="nav-icon">🏠</span>
+            <span className="nav-label">Home</span>
+          </button>
+          <button
+            className={`nav-item ${activeTab === "quran" ? "active" : ""}`}
+            onClick={() => setActiveTab("quran")}
+          >
+            <span className="nav-icon">📖</span>
+            <span className="nav-label">Quran</span>
+          </button>
+          <button
+            className={`nav-item ${activeTab === "prayer" ? "active" : ""}`}
+            onClick={() => setActiveTab("prayer")}
+          >
+            <div className="nav-center-button">
+              <span className="nav-main-icon">🕌</span>
+            </div>
+            <span className="nav-label">Prayer</span>
+          </button>
+          <button
+            className={`nav-item ${activeTab === "qibla" ? "active" : ""}`}
+            onClick={() => setActiveTab("qibla")}
+          >
+            <span className="nav-icon">🧭</span>
+            <span className="nav-label">Qibla</span>
+          </button>
+          <button
+            className={`nav-item ${activeTab === "more" ? "active" : ""}`}
+            onClick={() => setActiveTab("more")}
+          >
+            <span className="nav-icon">⋮</span>
+            <span className="nav-label">More</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Footer */}
+      <footer className="app-footer">
+        <div className="footer-content">
+          <div className="branding">
+            <span className="brand-icon">☪️</span>
+            <span className="brand-name">Islamic Lifestyle App</span>
+          </div>
+          <div className="social-handle">
+            <span className="handle-prefix">@</span>
+            netrosystems
+          </div>
+          <p className="tagline">Your daily companion for spiritual growth</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default IslamicHome;
