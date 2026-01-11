@@ -56,9 +56,95 @@ const IslamicHome = () => {
         </div>
       </header>
 
+      <div className="quick-tabs">
+        <div className="quick-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139807/qibla_10913318_crtvli.png"
+            alt=""
+            className="quick-acc-icon"
+          />
+          <span>Qibla</span>
+        </div>
+        <div className="quick-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139806/ramadan_6706288_aytrja.png"
+            alt=""
+            className="quick-acc-icon"
+          />
+          <span>Calender</span>
+        </div>
+
+        <div className="quick-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139809/beads_2397486_jicbam.png"
+            alt=""
+            className="quick-acc-icon"
+          />
+          <span>Tasbeeh</span>
+        </div>
+
+        <div className="quick-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139808/salah_7171885_xyhhjq.png"
+            alt=""
+            className="quick-acc-icon"
+          />
+          <span>Dua</span>
+        </div>
+        <div className="quick-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139806/allah_7161428_jwwhn6.png"
+            alt=""
+            className="quick-acc-icon"
+          />
+          <span>Names</span>
+        </div>
+        <div className="quick-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139707/1000066380-removebg-preview_e83dim.png"
+            alt=""
+            className="quick-acc-icon"
+          />
+          <span>Dhikir</span>
+        </div>
+      </div>
+
       {/* Main Content */}
       <main className="main-content">
-        {/* Prayer Card */}
+        {/* Namaz Timings Card */}
+        <div className="card namaz-card">
+          <div className="card-header">
+            <span className="card-icon">🕋</span>
+            <div className="card-title-group">
+              <h2 className="card-title">Namaz Timings</h2>
+              <p className="card-subtitle">Today's prayer schedule</p>
+            </div>
+            <span className="card-arrow">→</span>
+          </div>
+          <div className="prayer-times">
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Fajr</span>
+              <span className="prayer-time-small">04:30 AM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Dhuhr</span>
+              <span className="prayer-time-small">12:15 PM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Asr</span>
+              <span className="prayer-time-small">04:30 PM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Maghrib</span>
+              <span className="prayer-time-small">06:45 PM</span>
+            </div>
+            <div className="prayer-time-item">
+              <span className="prayer-name-small">Isha</span>
+              <span className="prayer-time-small">08:00 PM</span>
+            </div>
+          </div>
+        </div>
+
         <div className="card prayer-card">
           <div className="card-header">
             <span className="card-icon">🕌</span>
@@ -100,40 +186,6 @@ const IslamicHome = () => {
           </div>
         </div>
 
-        {/* Namaz Timings Card */}
-        <div className="card namaz-card">
-          <div className="card-header">
-            <span className="card-icon">🕋</span>
-            <div className="card-title-group">
-              <h2 className="card-title">Namaz Timings</h2>
-              <p className="card-subtitle">Today's prayer schedule</p>
-            </div>
-            <span className="card-arrow">→</span>
-          </div>
-          <div className="prayer-times">
-            <div className="prayer-time-item">
-              <span className="prayer-name-small">Fajr</span>
-              <span className="prayer-time-small">04:30 AM</span>
-            </div>
-            <div className="prayer-time-item">
-              <span className="prayer-name-small">Dhuhr</span>
-              <span className="prayer-time-small">12:15 PM</span>
-            </div>
-            <div className="prayer-time-item">
-              <span className="prayer-name-small">Asr</span>
-              <span className="prayer-time-small">04:30 PM</span>
-            </div>
-            <div className="prayer-time-item">
-              <span className="prayer-name-small">Maghrib</span>
-              <span className="prayer-time-small">06:45 PM</span>
-            </div>
-            <div className="prayer-time-item">
-              <span className="prayer-name-small">Isha</span>
-              <span className="prayer-time-small">08:00 PM</span>
-            </div>
-          </div>
-        </div>
-
         {/* Time & Location Section */}
         <div className="time-location-section">
           <div className="time-display">
@@ -157,14 +209,23 @@ const IslamicHome = () => {
             className={`nav-item ${activeTab === "home" ? "active" : ""}`}
             onClick={() => setActiveTab("home")}
           >
-            <span className="nav-icon">🏠</span>
+            <img
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768141633/home_18020336_n0drdk.png"
+              alt=""
+              className="nav-icon"
+            />
+
             <span className="nav-label">Home</span>
           </button>
           <button
             className={`nav-item ${activeTab === "quran" ? "active" : ""}`}
             onClick={() => setActiveTab("quran")}
           >
-            <span className="nav-icon">📖</span>
+            <img
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768141633/home_18020336_n0drdk.png"
+              alt=""
+              className="nav-icon"
+            />
             <span className="nav-label">Quran</span>
           </button>
           <button
@@ -172,15 +233,23 @@ const IslamicHome = () => {
             onClick={() => setActiveTab("prayer")}
           >
             <div className="nav-center-button">
-              <span className="nav-main-icon">🕌</span>
+              <img
+                src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139808/book_13534590_tpkk5z.png"
+                alt=""
+                className="nav-icon-center"
+              />
             </div>
-            <span className="nav-label">Prayer</span>
+            <span className="nav-label ">Quran</span>
           </button>
           <button
             className={`nav-item ${activeTab === "qibla" ? "active" : ""}`}
             onClick={() => setActiveTab("qibla")}
           >
-            <span className="nav-icon">🧭</span>
+            <img
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768141633/home_18020336_n0drdk.png"
+              alt=""
+              className="nav-icon"
+            />
             <span className="nav-label">Qibla</span>
           </button>
           <button

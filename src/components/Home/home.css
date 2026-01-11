@@ -1,13 +1,13 @@
 .islamic-lifestyle-app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #24378a 0%, #90a3f8, #e3ccfa 100%);
+  /* background: linear-gradient(135deg, #24378a 0%, #90a3f8, #e3ccfa 100%); */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  max-width: 375px;
-  margin: 0 auto;
+  width: 100%;
+  /* margin: 0 auto; */
   position: relative;
   overflow-x: hidden;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
+  padding-bottom: 100px;
 }
 
 /* Header Styles */
@@ -291,8 +291,8 @@
   background: white;
   padding: 10px 20px;
   border-top: 1px solid #eee;
-  max-width: 375px;
-  margin: 0 auto;
+  width: 100%;
+  /* margin: 0 auto; */
   border-radius: 0 0 20px 20px;
   z-index: 1000;
   box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
@@ -329,7 +329,7 @@
 }
 
 .nav-icon {
-  font-size: 22px;
+  height: 25px;
   transition: transform 0.3s ease;
 }
 
@@ -338,7 +338,7 @@
   top: -25px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #4a6fa5, #3a5a8a);
+  background: linear-gradient(135deg, #d2e0f6, #b8ffc8);
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -348,6 +348,9 @@
   box-shadow: 0 5px 20px rgba(74, 111, 165, 0.4);
   z-index: 2;
   border: 4px solid white;
+}
+.nav-icon-center {
+  height: 42px;
 }
 
 .nav-main-icon {
@@ -366,7 +369,7 @@
 }
 
 .nav-item:nth-child(3) .nav-label {
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 /* Footer */
@@ -603,4 +606,36 @@
   );
   pointer-events: none;
   z-index: 1;
+}
+
+.quick-tabs {
+  display: flex;
+  text-align: center;
+  padding: 12px 16px;
+  gap: 25px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 16px;
+}
+.quick-tabs span {
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: Roboto;
+}
+
+/* Chrome, Edge, Safari */
+.quick-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-acc-icon {
+  height: 60px;
+}
+
+@media (min-width: 992px) {
+  .bottom-nav,
+  .islamic-lifestyle-app {
+    max-width: 375px;
+    margin: 0 auto;
+  }
 }
