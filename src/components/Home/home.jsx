@@ -43,10 +43,23 @@ const IslamicHome = () => {
         <div className="header-content">
           <h1 className="app-title">Islamic Divine</h1>
 
-          <div className="prayer-indicator">
+          {/* <div className="prayer-indicator">
             <span className="prayer-label">Next Prayer:</span>
             <span className="prayer-name">Asr</span>
             <span className="prayer-time">04:30 PM</span>
+          </div> */}
+
+          <div className="quick-info-head">
+            <div className="prayer-time">
+              <h4>Asar</h4>
+              <h2>4:50 pm</h2>
+              <p>Next Prayer in 03.12</p>
+            </div>
+
+            <div className="prayer-time">
+              <h4>Rajab Month</h4>
+              <h2>4:50 pm</h2>
+            </div>
           </div>
 
           <img
@@ -111,7 +124,7 @@ const IslamicHome = () => {
       </div>
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="home-main-content">
         {/* Namaz Timings Card */}
         <div className="card namaz-card">
           <div className="card-header">
@@ -231,11 +244,11 @@ const IslamicHome = () => {
             onClick={() => setActiveTab("quran")}
           >
             <img
-              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768141633/home_18020336_n0drdk.png"
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768729011/trophy_pjhyqw.png"
               alt=""
               className="nav-icon"
             />
-            <span className="nav-label">Quran</span>
+            <span className="nav-label">Quiz</span>
           </button>
           <button
             className={`nav-item ${activeTab === "prayer" ? "active" : ""}`}
@@ -243,7 +256,7 @@ const IslamicHome = () => {
           >
             <div className="nav-center-button">
               <img
-                src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139808/book_13534590_tpkk5z.png"
+                src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768728586/recite_ijjq63.png"
                 alt=""
                 className="nav-icon-center"
               />
@@ -255,7 +268,7 @@ const IslamicHome = () => {
             onClick={() => setActiveTab("qibla")}
           >
             <img
-              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768141633/home_18020336_n0drdk.png"
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768729087/qibla_uy8ux5.png"
               alt=""
               className="nav-icon"
             />
