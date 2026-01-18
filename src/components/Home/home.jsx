@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./home.css";
+import { Link } from "react-router-dom";
 
 const IslamicHome = () => {
   const [currentTime, setCurrentTime] = useState("");
@@ -143,6 +144,14 @@ const IslamicHome = () => {
               <span className="prayer-time-small">08:00 PM</span>
             </div>
           </div>
+        </div>
+
+        <div className="listen-quran-card">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768727327/Listen_Quran_4_mhemff.png"
+            alt="listen-quran"
+            className="listen-quran-img"
+          />
         </div>
 
         <div className="card prayer-card">
