@@ -1,6 +1,7 @@
 .islamic-lifestyle-app {
   min-height: 100vh;
   /* background: linear-gradient(135deg, #24378a 0%, #90a3f8, #e3ccfa 100%); */
+
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   width: 100%;
@@ -13,7 +14,7 @@
 
 /* Header Styles */
 .app-header {
-  height: 30vh;
+  height: 25vh;
   padding-top: 15px;
   background: linear-gradient(to bottom, #0c1953, #44549b, #82a9eb);
 }
@@ -23,7 +24,7 @@
   object-fit: contain;
   opacity: 0.5;
   position: relative;
-  bottom: 110px;
+  bottom: 90px;
 }
 
 .quick-info-head {
@@ -103,12 +104,13 @@
 /* Main Content */
 .home-main-content {
   padding: 10px;
-  background: #f5f7fa;
-  border-radius: 30px 30px 0 0;
+  /* background: #f5f7fa; */
+  border-radius: 10px 10px 0 0;
   margin-top: -20px;
   position: relative;
   z-index: 2;
   min-height: 60vh;
+  background: linear-gradient(to bottom, #293670, #44549b, #2d569e);
 }
 
 /* Card Styles */
@@ -658,7 +660,7 @@
 }
 
 .quick-acc-icon {
-  height: 60px;
+  height: 35px;
 }
 
 @media (min-width: 992px) {

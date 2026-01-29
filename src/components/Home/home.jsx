@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./home.css";
 import { Link } from "react-router-dom";
+import PrayerTimesPage from "../PrayerTimings/playerTimings";
 
 const IslamicHome = () => {
   const [currentTime, setCurrentTime] = useState("");
@@ -51,15 +52,14 @@ const IslamicHome = () => {
 
           <div className="quick-info-head">
             <div className="prayer-time">
-              <h4>Asar</h4>
-              <h2>4:50 pm</h2>
-              <p>Next Prayer in 03.12</p>
+              <h4>Hijiri Date</h4>
+              <h6>Shaban 1147, 20</h6>
             </div>
 
-            <div className="prayer-time">
-              <h4>Rajab Month</h4>
-              <h2>4:50 pm</h2>
-            </div>
+            {/* <div className="prayer-time">
+              <h4>Hijiri Date</h4>
+              <h2>1147</h2>
+            </div> */}
           </div>
 
           <img
@@ -126,7 +126,7 @@ const IslamicHome = () => {
       {/* Main Content */}
       <main className="home-main-content">
         {/* Namaz Timings Card */}
-        <div className="card namaz-card">
+        {/* <div className="card namaz-card">
           <div className="card-header">
             <span className="card-icon">🕋</span>
             <div className="card-title-group">
@@ -157,11 +157,13 @@ const IslamicHome = () => {
               <span className="prayer-time-small">08:00 PM</span>
             </div>
           </div>
-        </div>
+        </div> */}
+
+        <PrayerTimesPage />
 
         <div className="listen-quran-card">
           <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768727327/Listen_Quran_4_mhemff.png"
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769354991/Listen_Audio_Quran_20260125_205534_0000_bzdnqp.png"
             alt="listen-quran"
             className="listen-quran-img"
           />
