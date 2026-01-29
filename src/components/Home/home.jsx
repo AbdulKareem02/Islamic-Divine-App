@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./home.css";
 import { Link } from "react-router-dom";
 import PrayerTimesPage from "../PrayerTimings/playerTimings";
@@ -22,6 +22,11 @@ const IslamicHome = () => {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const azanPlayedRef = useRef(false);
+  const azanAudio = useRef(
+    new Audio("/public/azan.mpeg"), // put azan.mp3 in public folder
+  );
 
   return (
     <div className="islamic-lifestyle-app">

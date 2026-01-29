@@ -110,7 +110,7 @@
   position: relative;
   z-index: 2;
   min-height: 60vh;
-  background: linear-gradient(to bottom, #293670, #44549b, #2d569e);
+  background: linear-gradient(to top, #293670, #44549b, #2d569e);
 }
 
 /* Card Styles */

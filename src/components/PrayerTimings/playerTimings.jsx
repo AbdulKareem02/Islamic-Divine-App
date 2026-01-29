@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-
 import "./prayerTimings.css";
 import { Link } from "react-router-dom";
 
@@ -27,6 +26,9 @@ const PrayerTimesPage = () => {
   const [timeToNextPrayer, setTimeToNextPrayer] = useState("");
 
   const containerRef = useRef(null);
+  const azanAudioRef = useRef(null);
+  const azanPlayedRef = useRef(false);
+  const azaanTestPlayedRef = useRef(false); // For manual testing
 
   // Prayer names with Arabic
   const prayers = [
@@ -37,6 +39,21 @@ const PrayerTimesPage = () => {
     { key: "Maghrib", name: "Maghrib", arabic: "المغرب" },
     { key: "Isha", name: "Isha", arabic: "العشاء" },
   ];
+
+  // Initialize audio on component mount
+  useEffect(() => {
+    azanAudioRef.current = new Audio("/azan.mpeg");
+
+    // Optional: Preload the audio
+    azanAudioRef.current.load();
+
+    return () => {
+      if (azanAudioRef.current) {
+        azanAudioRef.current.pause();
+        azanAudioRef.current = null;
+      }
+    };
+  }, []);
 
   // Fetch user's current location on component mount
   useEffect(() => {
@@ -116,24 +133,32 @@ const PrayerTimesPage = () => {
     }
   }, [location, date]);
 
-  // Calculate current and next prayer
+  // Calculate current and next prayer when prayerTimes change
   useEffect(() => {
     if (prayerTimes) {
       calculateCurrentAndNextPrayer();
     }
   }, [prayerTimes]);
 
-  // Update time to next prayer every minute
+  // Update time to next prayer every second for better accuracy
   useEffect(() => {
-    if (nextPrayer) {
-      const interval = setInterval(() => {
+    let interval;
+
+    const updateTimer = () => {
+      if (nextPrayer && nextPrayer.time) {
         calculateTimeToNextPrayer();
-      }, 60000); // Update every minute
+        checkAndPlayAzaan(); // Check if it's 1 minute before prayer
+      }
+    };
 
-      calculateTimeToNextPrayer(); // Initial calculation
-
-      return () => clearInterval(interval);
+    if (nextPrayer) {
+      updateTimer(); // Initial call
+      interval = setInterval(updateTimer, 1000); // Update every second
     }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [nextPrayer]);
 
   const fetchPrayerTimes = async () => {
@@ -195,22 +220,72 @@ const PrayerTimesPage = () => {
     if (!nextPrayer || !nextPrayer.time) return;
 
     const now = new Date();
-    const currentTime = now.getHours() * 60 + now.getMinutes();
-    const nextPrayerTime = convertTimeToMinutes(nextPrayer.time);
+    const currentSeconds =
+      now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
-    let minutesDiff = nextPrayerTime - currentTime;
+    const [timeStr, period] = nextPrayer.time.split(" ");
+    let [hours, minutes] = timeStr.split(":").map(Number);
 
-    if (minutesDiff < 0) {
-      minutesDiff += 24 * 60; // Add 24 hours if prayer is tomorrow
+    // Convert to 24-hour format
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+
+    const nextSeconds = hours * 3600 + minutes * 60;
+
+    let diff = nextSeconds - currentSeconds;
+    if (diff < 0) diff += 24 * 3600;
+
+    const hrs = Math.floor(diff / 3600);
+    const mins = Math.floor((diff % 3600) / 60);
+    const secs = diff % 60;
+
+    // Format time string
+    if (hrs > 0) {
+      setTimeToNextPrayer(`${hrs}h ${mins}m ${secs}s`);
+    } else if (mins > 0) {
+      setTimeToNextPrayer(`${mins}m ${secs}s`);
+    } else {
+      setTimeToNextPrayer(`${secs}s`);
+    }
+  };
+
+  const checkAndPlayAzaan = () => {
+    if (!nextPrayer || !nextPrayer.time || azanPlayedRef.current) return;
+
+    const now = new Date();
+    const currentSeconds =
+      now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+    const [timeStr, period] = nextPrayer.time.split(" ");
+    let [hours, minutes] = timeStr.split(":").map(Number);
+
+    // Convert to 24-hour format
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+
+    const prayerSeconds = hours * 3600 + minutes * 60;
+
+    // Calculate 1 minute before prayer
+    const oneMinuteBefore = prayerSeconds - 60;
+
+    // Adjust for midnight wrap-around
+    let diff;
+    if (oneMinuteBefore < 0) {
+      diff = 24 * 3600 + oneMinuteBefore - currentSeconds;
+    } else {
+      diff = oneMinuteBefore - currentSeconds;
     }
 
-    const hours = Math.floor(minutesDiff / 60);
-    const minutes = minutesDiff % 60;
+    // If we're exactly at 1 minute before prayer (with 1 second tolerance)
+    if (diff >= 0 && diff <= 1) {
+      playAzaanSound();
+      azanPlayedRef.current = true;
+    }
 
-    if (hours > 0) {
-      setTimeToNextPrayer(`${hours}h ${minutes}m`);
-    } else {
-      setTimeToNextPrayer(`${minutes}m`);
+    // Reset flag after prayer time passes
+    const prayerDiff = prayerSeconds - currentSeconds;
+    if (prayerDiff <= 0) {
+      azanPlayedRef.current = false;
     }
   };
 
@@ -290,6 +365,38 @@ const PrayerTimesPage = () => {
     }
   };
 
+  const formatTo12Hour = (timeString) => {
+    if (!timeString) return "";
+
+    // Handle format like "05:18 (EAT)" or "05:18 AM"
+    const timePart = timeString.split(" ")[0];
+    const [hoursStr, minutes] = timePart.split(":");
+    let hours = parseInt(hoursStr, 10);
+
+    // Check if it already has AM/PM
+    if (timeString.includes("AM") || timeString.includes("PM")) {
+      return timeString;
+    }
+
+    // Determine AM/PM
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12; // convert 0 -> 12
+
+    return `${hours.toString().padStart(2, "0")}:${minutes} ${ampm}`;
+  };
+
+  // Function to play azaan sound
+  const playAzaanSound = () => {
+    if (azanAudioRef.current) {
+      azanAudioRef.current.currentTime = 0; // Reset to start
+      azanAudioRef.current.play().catch((error) => {
+        console.error("Error playing azaan:", error);
+      });
+    }
+  };
+
+  // Test function for manual testing
+
   if (loading || isFetchingLocation) {
     return (
       <div className="loading-container">
@@ -313,18 +420,6 @@ const PrayerTimesPage = () => {
       </div>
     );
   }
-
-  const formatTo12Hour = (timeString) => {
-    if (!timeString) return "";
-
-    const [hoursStr, minutes] = timeString.split(":");
-    let hours = parseInt(hoursStr, 10);
-    const ampm = hours >= 12 ? "PM" : "AM";
-
-    hours = hours % 12 || 12; // convert 0 -> 12
-
-    return `${hours}:${minutes} ${ampm}`;
-  };
 
   return (
     <div className="prayer-times-page" ref={containerRef}>
@@ -366,7 +461,6 @@ const PrayerTimesPage = () => {
               </div>
 
               <div className="prayer-time-section">
-                {/* <p className="prayer-time">{currentPrayer.time}</p> */}
                 <p className="prayer-time">
                   {formatTo12Hour(currentPrayer.time)}
                 </p>
@@ -383,7 +477,6 @@ const PrayerTimesPage = () => {
                 <p className="arabic-name">{nextPrayer.arabic}</p>
               </div>
               <div className="prayer-time-section">
-                {/* <p className="prayer-time">{nextPrayer.time}</p> */}
                 <p className="prayer-time">{formatTo12Hour(nextPrayer.time)}</p>
                 <p className="time-remaining">in {timeToNextPrayer}</p>
               </div>
@@ -397,98 +490,21 @@ const PrayerTimesPage = () => {
               </div>
             </Link>
           </div>
-          {/* 
-          <div className="next-prayer-card">
-            <div className="prayer-status">
-              <div className="status-indicator next"></div>
-              <span>Next Prayer</span>
-            </div>
-            <div className="prayer-details">
-              <div className="prayer-name-section">
-                <h3>{nextPrayer.name}</h3>
-                <p className="arabic-name">{nextPrayer.arabic}</p>
-              </div>
-              <div className="prayer-time-section">
-                <p className="prayer-time">{nextPrayer.time}</p>
-                <p className="time-remaining">in {timeToNextPrayer}</p>
-              </div>
-            </div>
-          </div> */}
         </div>
       )}
 
-      {/* All Prayers Card */}
-      {/* <div className={`all-prayers-card ${expanded ? "expanded" : ""}`}>
-        <div className="card-header" onClick={() => setExpanded(!expanded)}>
-          <h3>All Prayer Times</h3>
-          <div className="expand-icon">{expanded ? "▲" : "▼"}</div>
-        </div>
-
-        {expanded && (
-          <div className="prayer-times-list">
-            {prayers.map((prayer) => (
-              <div key={prayer.key} className="prayer-item">
-                <div className="prayer-item-left">
-                  <h4>{prayer.name}</h4>
-                  <p className="arabic-text">{prayer.arabic}</p>
-                </div>
-                <div className="prayer-item-right">
-                  <p className="time-text">
-                    {prayerTimes?.timings[prayer.key]}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Azaan Status Indicator */}
+      <div className="azaan-status">
+        <p>
+          Azaan will play automatically 1 minute before{" "}
+          {nextPrayer?.name || "prayer"} time
+        </p>
+        {azanPlayedRef.current && (
+          <p className="azaan-played-notice">
+            🎵 Azaan reminder has been played
+          </p>
         )}
-      </div> */}
-
-      {/* Search Section */}
-      {/* <div className="search-section">
-        <div className="search-box">
-          <input
-            type="text"
-            value={searchCity}
-            onChange={(e) => setSearchCity(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Search city..."
-            className="search-input"
-          />
-          <button
-            onClick={handleCitySearch}
-            className="search-btn"
-            disabled={isFetchingLocation || !searchCity.trim()}
-          >
-            Search
-          </button>
-        </div>
-
-        <button
-          className="current-location-btn"
-          onClick={handleUseCurrentLocation}
-          disabled={isFetchingLocation}
-        >
-          <span className="btn-icon">📍</span>
-          Current Location
-        </button>
-
-        <div className="date-picker">
-          <label htmlFor="date">Select Date:</label>
-          <input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            max={new Date().toISOString().split("T")[0]}
-          />
-        </div>
-      </div> */}
-
-      {/* Footer */}
-      {/* <div className="prayer-footer">
-        <p>May your prayers be accepted</p>
-        <div className="footer-decoration">☪</div>
-      </div> */}
+      </div>
     </div>
   );
 };
