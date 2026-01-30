@@ -1,3 +1,29 @@
+.god-names-quiz-card {
+  display: flex;
+  justify-content: space-around;
+  margin: 12px;
+}
+
+.home-quiz-card {
+  height: 50px;
+  width: 40%;
+  background-color: #fff;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-god-names-card {
+  height: 50px;
+  width: 40%;
+  background-color: #aeff98;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .islamic-lifestyle-app {
   min-height: 100vh;
   /* background: linear-gradient(135deg, #24378a 0%, #90a3f8, #e3ccfa 100%); */

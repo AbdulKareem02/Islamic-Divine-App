@@ -427,7 +427,7 @@ const PrayerTimesPage = () => {
       <div className="prayer-header">
         <div className="header-content">
           <h1>Prayer Times</h1>
-          <div className="location-info">
+          {/* <div className="location-info">
             <div className="location-icon">
               <FaLocationDot />
             </div>
@@ -442,7 +442,7 @@ const PrayerTimesPage = () => {
                 })}
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

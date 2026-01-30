@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./home.css";
 import { Link } from "react-router-dom";
 import PrayerTimesPage from "../PrayerTimings/playerTimings";
+import QiblaCompass from "../Kaaba/kaaba";
 
 const IslamicHome = () => {
   const [currentTime, setCurrentTime] = useState("");
@@ -22,11 +23,6 @@ const IslamicHome = () => {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const azanPlayedRef = useRef(false);
-  const azanAudio = useRef(
-    new Audio("/public/azan.mpeg"), // put azan.mp3 in public folder
-  );
 
   return (
     <div className="islamic-lifestyle-app">
@@ -174,6 +170,29 @@ const IslamicHome = () => {
           />
         </div>
 
+        <div className="god-names-quiz-card">
+          <div className="home-quiz-card">
+            <p>Quiz</p>
+          </div>
+          <div className="home-god-names-card">99 Names</div>
+        </div>
+
+        <div className="islamic-quiz">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769782761/islam_quiz_image_lz8y7a.jpg"
+            alt="listen-quran"
+            className="listen-quran-img"
+          />
+        </div>
+
+        <div className="99-names-of-allah">
+          <img
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769782761/99_names_of_allah_1_hytyia.png"
+            alt="allah-names"
+            className="listen-quran-img"
+          />
+        </div>
+
         <div className="card prayer-card">
           <div className="card-header">
             <span className="card-icon">🕌</span>
@@ -305,6 +324,8 @@ const IslamicHome = () => {
           <p className="tagline">Your daily companion for spiritual growth</p>
         </div>
       </footer>
+
+      <QiblaCompass />
     </div>
   );
 };
