@@ -52,19 +52,19 @@ const IslamicHome = () => {
           </div> */}
 
           <div className="quick-info-head">
-            <div className="prayer-time">
-              <h4>Hijiri Date</h4>
-              <h6>Shaban 1147, 20</h6>
-            </div>
-
             {/* <div className="prayer-time">
               <h4>Hijiri Date</h4>
-              <h2>1147</h2>
+              <h6>Shaban 1147, 20</h6>
             </div> */}
+
+            <div className="home-prayer-time">
+              <h4>Hijiri Date</h4>
+              <h2>1147</h2>
+            </div>
           </div>
 
           <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1767449652/1000052349-removebg-preview_pt4t97_x0z25s.png"
+            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769789162/1000083159_bg_removed.png_di0sqo.png"
             alt="Islamic Divine"
             className="home-banner-img"
           />
