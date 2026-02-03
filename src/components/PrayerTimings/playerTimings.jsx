@@ -492,19 +492,6 @@ const PrayerTimesPage = () => {
           </div>
         </div>
       )}
-
-      {/* Azaan Status Indicator */}
-      <div className="azaan-status">
-        <p>
-          Azaan will play automatically 1 minute before{" "}
-          {nextPrayer?.name || "prayer"} time
-        </p>
-        {azanPlayedRef.current && (
-          <p className="azaan-played-notice">
-            🎵 Azaan reminder has been played
-          </p>
-        )}
-      </div>
     </div>
   );
 };

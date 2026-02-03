@@ -1,0 +1,280 @@
+.tasbeeh-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/007/712/737/small_2x/islamic-background-eid-mubarak-background-ramadan-kareem-background-free-vector.jpg");
+  background-size: cover;
+}
+
+.tasbeeh-container.dark-mode {
+  background-color: #1a1a2e;
+  color: #e6e6e6;
+  background-image: url("https://img.freepik.com/premium-photo/silhouette-mosques-dome-towers-with-crescent-moon-dark-blue-twilight-sky-vertical-frame_43514-1904.jpg");
+  background-size: cover;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .theme-toggle {
+  border-color: #555;
+  color: #e6e6e6;
+}
+
+.tasbeeh-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tasbeeh-option {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tasbeeh-option.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.dark-mode .tasbeeh-option {
+  background-color: #333;
+  color: #e6e6e6;
+}
+
+.dark-mode .tasbeeh-option.active {
+  background-color: #2e7d32;
+}
+
+.tasbeeh-display {
+  margin: 25px 0;
+}
+
+.arabic-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2e7d32;
+}
+
+.dark-mode .arabic-text {
+  color: #4caf50;
+}
+
+.translation {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.pronunciation {
+  font-style: italic;
+  color: #666;
+}
+
+.dark-mode .pronunciation {
+  color: #aaa;
+}
+
+.counter-button {
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.counter-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.counter-button.animate {
+  transform: scale(0.95);
+}
+
+.count {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.label {
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+.progress-container {
+  width: 80%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin: 20px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-mode .progress-container {
+  background-color: #333;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #2e7d32);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.dark-mode .progress-text {
+  color: #e6e6e6;
+}
+
+.circle-counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.circle-label {
+  font-size: 1rem;
+}
+
+.circle-count {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.dark-mode .circle-count {
+  color: #4caf50;
+}
+
+.reset-button {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.reset-button:hover {
+  background-color: #d32f2f;
+}
+
+.instructions {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.dark-mode .instructions {
+  color: #aaa;
+}
+
+@media (max-width: 500px) {
+  .tasbeeh-container {
+    padding: 15px;
+  }
+
+  .arabic-text {
+    font-size: 2rem;
+  }
+
+  .counter-button {
+    width: 120px;
+    height: 120px;
+  }
+
+  .count {
+    font-size: 2.5rem;
+  }
+}
+.header-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.sound-toggle {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .sound-toggle {
+  border-color: #555;
+  color: #e6e6e6;
+}
+
+.sound-on {
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.sound-off {
+  background-color: rgba(244, 67, 54, 0.2);
+}
+
+.dark-mode .sound-on {
+  background-color: rgba(46, 125, 50, 0.3);
+}
+
+.dark-mode .sound-off {
+  background-color: rgba(211, 47, 47, 0.3);
+}

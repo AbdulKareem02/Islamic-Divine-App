@@ -88,15 +88,16 @@ const IslamicHome = () => {
           />
           <span>Calender</span>
         </div>
-
-        <div className="quick-card">
-          <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139809/beads_2397486_jicbam.png"
-            alt=""
-            className="quick-acc-icon"
-          />
-          <span>Tasbeeh</span>
-        </div>
+        <Link to="/tasbeeh" className="route-link">
+          <div className="quick-card">
+            <img
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139809/beads_2397486_jicbam.png"
+              alt=""
+              className="quick-acc-icon"
+            />
+            <span>Tasbeeh</span>
+          </div>
+        </Link>
 
         <div className="quick-card">
           <img

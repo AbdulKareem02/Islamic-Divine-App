@@ -3,3 +3,9 @@
   margin: 0px;
   box-sizing: border-box;
 }
+
+.route-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}

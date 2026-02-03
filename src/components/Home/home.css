@@ -1,3 +1,22 @@
+/* Add to your CSS */
+.quick-tabs {
+  position: relative;
+  z-index: 10; /* Higher z-index to stay above */
+}
+
+.listen-quran-card,
+.god-names-quiz-card,
+.islamic-quiz-card,
+.names-of-allah-card {
+  position: relative;
+  z-index: 5;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+}
+
 .home-prayer-time {
   margin-left: auto;
 }
