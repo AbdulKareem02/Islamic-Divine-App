@@ -80,14 +80,17 @@ const IslamicHome = () => {
           />
           <span>Qibla</span>
         </div>
-        <div className="quick-card">
-          <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139806/ramadan_6706288_aytrja.png"
-            alt=""
-            className="quick-acc-icon"
-          />
-          <span>Calender</span>
-        </div>
+
+        <Link to="/calender" className="route-link">
+          <div className="quick-card">
+            <img
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139806/ramadan_6706288_aytrja.png"
+              alt=""
+              className="quick-acc-icon"
+            />
+            <span>Calender</span>
+          </div>
+        </Link>
         <Link to="/tasbeeh" className="route-link">
           <div className="quick-card">
             <img
@@ -98,7 +101,6 @@ const IslamicHome = () => {
             <span>Tasbeeh</span>
           </div>
         </Link>
-
         <div className="quick-card">
           <img
             src="https://res.cloudinary.com/dsizcysfr/image/upload/v1768139808/salah_7171885_xyhhjq.png"
@@ -167,29 +169,6 @@ const IslamicHome = () => {
           <img
             src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769354991/Listen_Audio_Quran_20260125_205534_0000_bzdnqp.png"
             alt="listen-quran"
-            className="listen-quran-img"
-          />
-        </div>
-
-        <div className="god-names-quiz-card">
-          <div className="home-quiz-card">
-            <p>Quiz</p>
-          </div>
-          <div className="home-god-names-card">99 Names</div>
-        </div>
-
-        <div className="islamic-quiz">
-          <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769782761/islam_quiz_image_lz8y7a.jpg"
-            alt="listen-quran"
-            className="listen-quran-img"
-          />
-        </div>
-
-        <div className="99-names-of-allah">
-          <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769782761/99_names_of_allah_1_hytyia.png"
-            alt="allah-names"
             className="listen-quran-img"
           />
         </div>
