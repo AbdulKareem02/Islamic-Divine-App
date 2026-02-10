@@ -7,28 +7,57 @@ import "./prayerTimings.css";
 import { Link } from "react-router-dom";
 
 const PrayerTimesPage = () => {
-  const [prayerTimes, setPrayerTimes] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [location, setLocation] = useState({
-    city: "",
-    country: "",
-    latitude: null,
-    longitude: null,
+  const [prayerTimes, setPrayerTimes] = useState(() => {
+    // Try to get cached prayer times from localStorage
+    const cached = localStorage.getItem("cachedPrayerTimes");
+    const cachedDate = localStorage.getItem("cachedPrayerDate");
+    const today = new Date().toISOString().split("T")[0];
+
+    if (cached && cachedDate === today) {
+      return JSON.parse(cached);
+    }
+    return null;
   });
+
+  const [location, setLocation] = useState(() => {
+    // Try to get cached location from localStorage
+    const cached = localStorage.getItem("cachedPrayerLocation");
+    if (cached) {
+      return JSON.parse(cached);
+    }
+    return {
+      city: "",
+      country: "",
+      latitude: null,
+      longitude: null,
+    };
+  });
+
+  const [loading, setLoading] = useState(!prayerTimes); // Only load if no cache
+  const [error, setError] = useState(null);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [searchCity, setSearchCity] = useState("");
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
-  const [displayLocation, setDisplayLocation] = useState("");
+  const [displayLocation, setDisplayLocation] = useState(() => {
+    const cached = localStorage.getItem("cachedDisplayLocation");
+    return cached || "";
+  });
   const [expanded, setExpanded] = useState(false);
-  const [currentPrayer, setCurrentPrayer] = useState(null);
-  const [nextPrayer, setNextPrayer] = useState(null);
+  const [currentPrayer, setCurrentPrayer] = useState(() => {
+    const cached = localStorage.getItem("cachedCurrentPrayer");
+    return cached ? JSON.parse(cached) : null;
+  });
+  const [nextPrayer, setNextPrayer] = useState(() => {
+    const cached = localStorage.getItem("cachedNextPrayer");
+    return cached ? JSON.parse(cached) : null;
+  });
   const [timeToNextPrayer, setTimeToNextPrayer] = useState("");
 
   const containerRef = useRef(null);
   const azanAudioRef = useRef(null);
   const azanPlayedRef = useRef(false);
   const azaanTestPlayedRef = useRef(false); // For manual testing
+  const prayerTimesFetchedRef = useRef(false);
 
   // Prayer names with Arabic
   const prayers = [
@@ -39,6 +68,54 @@ const PrayerTimesPage = () => {
     { key: "Maghrib", name: "Maghrib", arabic: "المغرب" },
     { key: "Isha", name: "Isha", arabic: "العشاء" },
   ];
+
+  // Cache prayer data to localStorage
+  const cachePrayerData = (data) => {
+    if (!data) return;
+
+    localStorage.setItem("cachedPrayerTimes", JSON.stringify(data));
+    localStorage.setItem("cachedPrayerDate", date);
+    localStorage.setItem("cachedPrayerLocation", JSON.stringify(location));
+    localStorage.setItem("cachedDisplayLocation", displayLocation);
+
+    // Also cache current and next prayer calculations
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+
+    const prayerTimesArray = prayers
+      .map((prayer) => ({
+        ...prayer,
+        time: data.timings[prayer.key],
+        minutes: convertTimeToMinutes(data.timings[prayer.key]),
+      }))
+      .sort((a, b) => a.minutes - b.minutes);
+
+    let current = null;
+    let next = null;
+
+    for (let i = 0; i < prayerTimesArray.length; i++) {
+      if (currentTime < prayerTimesArray[i].minutes) {
+        next = prayerTimesArray[i];
+        if (i > 0) {
+          current = prayerTimesArray[i - 1];
+        } else {
+          current = prayerTimesArray[prayerTimesArray.length - 1];
+        }
+        break;
+      }
+    }
+
+    if (!next) {
+      current = prayerTimesArray[prayerTimesArray.length - 1];
+      next = prayerTimesArray[0];
+    }
+
+    localStorage.setItem("cachedCurrentPrayer", JSON.stringify(current));
+    localStorage.setItem("cachedNextPrayer", JSON.stringify(next));
+
+    setCurrentPrayer(current);
+    setNextPrayer(next);
+  };
 
   // Initialize audio on component mount
   useEffect(() => {
@@ -55,9 +132,64 @@ const PrayerTimesPage = () => {
     };
   }, []);
 
+  // Function to fetch and cache prayer times for next day at midnight
+  const preloadNextDayPrayerTimes = async (lat, lng) => {
+    try {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+      const response = await fetch(
+        `https://api.aladhan.com/v1/timings/${tomorrowStr}?latitude=${lat}&longitude=${lng}&method=2`,
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("tomorrowPrayerTimes", JSON.stringify(data.data));
+        localStorage.setItem("tomorrowPrayerDate", tomorrowStr);
+        console.log("Next day prayer times preloaded");
+      }
+    } catch (error) {
+      console.error("Failed to preload next day prayer times:", error);
+    }
+  };
+
+  // Check if we need to refresh cached data (new day or location changed)
+  useEffect(() => {
+    const cachedDate = localStorage.getItem("cachedPrayerDate");
+    const today = new Date().toISOString().split("T")[0];
+
+    if (cachedDate !== today || !prayerTimes) {
+      fetchPrayerTimes();
+    } else {
+      // Data is cached and still valid
+      setLoading(false);
+    }
+  }, [date]);
+
   // Fetch user's current location on component mount
   useEffect(() => {
     const getUserLocation = () => {
+      // Check if we have cached location
+      const cachedLocation = localStorage.getItem("cachedPrayerLocation");
+      if (cachedLocation) {
+        const parsedLocation = JSON.parse(cachedLocation);
+        setLocation(parsedLocation);
+
+        // Check if cached data is for today
+        const cachedDate = localStorage.getItem("cachedPrayerDate");
+        const today = new Date().toISOString().split("T")[0];
+
+        if (cachedDate === today) {
+          setLoading(false);
+        } else {
+          fetchPrayerTimes();
+        }
+
+        return;
+      }
+
+      // No cache, get fresh location
       if (navigator.geolocation) {
         setIsFetchingLocation(true);
         navigator.geolocation.getCurrentPosition(
@@ -88,7 +220,7 @@ const PrayerTimesPage = () => {
       );
       const data = await response.json();
 
-      setLocation({
+      const newLocation = {
         city:
           data.address.city ||
           data.address.town ||
@@ -97,41 +229,79 @@ const PrayerTimesPage = () => {
         country: data.address.country || "",
         latitude: lat,
         longitude: lng,
-      });
+      };
+
+      setLocation(newLocation);
+      localStorage.setItem("cachedPrayerLocation", JSON.stringify(newLocation));
 
       const locationName = `${data.address.city || data.address.town || data.address.village || "Your Location"}, ${data.address.country || ""}`;
-      setDisplayLocation(
-        type === "current" ? `${locationName} (Current)` : locationName,
-      );
+      const displayName =
+        type === "current" ? `${locationName} (Current)` : locationName;
+
+      setDisplayLocation(displayName);
+      localStorage.setItem("cachedDisplayLocation", displayName);
+
+      // Preload next day prayer times
+      preloadNextDayPrayerTimes(lat, lng);
     } catch (error) {
-      setLocation({
+      const newLocation = {
         city: type === "current" ? "Your Location" : "Searched Location",
         country: "",
         latitude: lat,
         longitude: lng,
-      });
-      setDisplayLocation(
-        type === "current" ? "Your Current Location" : "Searched Location",
-      );
+      };
+
+      setLocation(newLocation);
+      localStorage.setItem("cachedPrayerLocation", JSON.stringify(newLocation));
+
+      const displayName =
+        type === "current" ? "Your Current Location" : "Searched Location";
+      setDisplayLocation(displayName);
+      localStorage.setItem("cachedDisplayLocation", displayName);
+
+      // Preload next day prayer times even if reverse geocoding fails
+      preloadNextDayPrayerTimes(lat, lng);
     }
   };
 
   const setDefaultLocation = () => {
-    setLocation({
+    const defaultLocation = {
       city: "Mecca",
       country: "Saudi Arabia",
       latitude: 21.3891,
       longitude: 39.8579,
-    });
-    setDisplayLocation("Mecca, Saudi Arabia");
+    };
+
+    setLocation(defaultLocation);
+    localStorage.setItem(
+      "cachedPrayerLocation",
+      JSON.stringify(defaultLocation),
+    );
+
+    const displayName = "Mecca, Saudi Arabia";
+    setDisplayLocation(displayName);
+    localStorage.setItem("cachedDisplayLocation", displayName);
+
+    // Preload next day prayer times for default location
+    preloadNextDayPrayerTimes(21.3891, 39.8579);
   };
 
-  // Fetch prayer times when location or date changes
+  // Fetch prayer times when location changes
   useEffect(() => {
-    if (location.latitude && location.longitude) {
-      fetchPrayerTimes();
+    if (
+      location.latitude &&
+      location.longitude &&
+      !prayerTimesFetchedRef.current
+    ) {
+      const cachedDate = localStorage.getItem("cachedPrayerDate");
+      const today = new Date().toISOString().split("T")[0];
+
+      if (cachedDate !== today) {
+        fetchPrayerTimes();
+      }
+      prayerTimesFetchedRef.current = true;
     }
-  }, [location, date]);
+  }, [location]);
 
   // Calculate current and next prayer when prayerTimes change
   useEffect(() => {
@@ -173,6 +343,10 @@ const PrayerTimesPage = () => {
       }
       const data = await response.json();
       setPrayerTimes(data.data);
+      cachePrayerData(data.data);
+
+      // Preload next day prayer times
+      preloadNextDayPrayerTimes(location.latitude, location.longitude);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -181,6 +355,8 @@ const PrayerTimesPage = () => {
   };
 
   const calculateCurrentAndNextPrayer = () => {
+    if (!prayerTimes) return;
+
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
 
@@ -214,6 +390,10 @@ const PrayerTimesPage = () => {
 
     setCurrentPrayer(current);
     setNextPrayer(next);
+
+    // Update cache
+    localStorage.setItem("cachedCurrentPrayer", JSON.stringify(current));
+    localStorage.setItem("cachedNextPrayer", JSON.stringify(next));
   };
 
   const calculateTimeToNextPrayer = () => {
@@ -327,6 +507,10 @@ const PrayerTimesPage = () => {
         parseFloat(selectedLocation.lon),
         "search",
       );
+
+      // Clear current prayer times to force fresh fetch
+      setPrayerTimes(null);
+      localStorage.removeItem("cachedPrayerTimes");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -348,6 +532,11 @@ const PrayerTimesPage = () => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         await fetchLocationDetails(latitude, longitude, "current");
+
+        // Clear current prayer times to force fresh fetch
+        setPrayerTimes(null);
+        localStorage.removeItem("cachedPrayerTimes");
+
         setIsFetchingLocation(false);
       },
       (error) => {
@@ -395,9 +584,52 @@ const PrayerTimesPage = () => {
     }
   };
 
-  // Test function for manual testing
+  // Clear all cached data (useful for debugging or on logout)
+  const clearCache = () => {
+    localStorage.removeItem("cachedPrayerTimes");
+    localStorage.removeItem("cachedPrayerDate");
+    localStorage.removeItem("cachedPrayerLocation");
+    localStorage.removeItem("cachedDisplayLocation");
+    localStorage.removeItem("cachedCurrentPrayer");
+    localStorage.removeItem("cachedNextPrayer");
+    localStorage.removeItem("tomorrowPrayerTimes");
+    localStorage.removeItem("tomorrowPrayerDate");
+  };
 
-  if (loading || isFetchingLocation) {
+  // Add this useEffect to clear old cache on new day
+  useEffect(() => {
+    const checkAndClearCache = () => {
+      const cachedDate = localStorage.getItem("cachedPrayerDate");
+      const today = new Date().toISOString().split("T")[0];
+
+      if (cachedDate !== today) {
+        // Keep location cache but clear prayer times
+        localStorage.removeItem("cachedPrayerTimes");
+        localStorage.removeItem("cachedPrayerDate");
+        localStorage.removeItem("cachedCurrentPrayer");
+        localStorage.removeItem("cachedNextPrayer");
+      }
+    };
+
+    checkAndClearCache();
+  }, []);
+
+  // Show cached data immediately while fetching in background
+  const isShowingCachedData =
+    !loading &&
+    prayerTimes &&
+    localStorage.getItem("cachedPrayerDate") === date;
+
+  if (isFetchingLocation && !isShowingCachedData) {
+    return (
+      <div className="loading-container">
+        <p>Getting your location...</p>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (loading && !isShowingCachedData) {
     return (
       <div className="loading-container">
         <p>Loading Prayer Timings...</p>
@@ -406,7 +638,7 @@ const PrayerTimesPage = () => {
     );
   }
 
-  if (error) {
+  if (error && !isShowingCachedData) {
     return (
       <div className="prayer-error-container">
         <div className="prayer-error">
@@ -424,27 +656,6 @@ const PrayerTimesPage = () => {
   return (
     <div className="prayer-times-page" ref={containerRef}>
       {/* Header */}
-      <div className="prayer-header">
-        <div className="header-content">
-          <h1>Prayer Times</h1>
-          {/* <div className="location-info">
-            <div className="location-icon">
-              <FaLocationDot />
-            </div>
-            <div className="location-text">
-              <p className="location-name">{displayLocation}</p>
-              <p className="location-date">
-                {new Date(date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          </div> */}
-        </div>
-      </div>
 
       {/* Current & Next Prayer Card */}
       {currentPrayer && nextPrayer && (
@@ -481,9 +692,10 @@ const PrayerTimesPage = () => {
                 <p className="time-remaining">in {timeToNextPrayer}</p>
               </div>
             </div>
-            <Link to="/" className="route-link">
+            <Link to="/prayer-timings" className="route-link">
               <div className="show-all-prayer-link">
-                <p>All Prayer Timings</p>{" "}
+                <p>All Prayer Timings</p>
+
                 <span>
                   <FaAngleRight />
                 </span>

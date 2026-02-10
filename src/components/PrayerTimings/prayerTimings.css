@@ -1,3 +1,14 @@
+.cached-data-indicator {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-top: 8px;
+  display: inline-block;
+  font-weight: 500;
+}
+
 /* src/pages/PrayerTimesPage.css */
 .prayer-break-line {
   margin: 10px;
