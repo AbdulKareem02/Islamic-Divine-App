@@ -164,16 +164,17 @@ const IslamicHome = () => {
         </div> */}
 
         <PrayerTimesPage />
+        <Link to="/listen-quran">
+          <div className="listen-quran-card">
+            <img
+              src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769354991/Listen_Audio_Quran_20260125_205534_0000_bzdnqp.png"
+              alt="listen-quran"
+              className="listen-quran-img"
+            />
+          </div>
+        </Link>
 
-        <div className="listen-quran-card">
-          <img
-            src="https://res.cloudinary.com/dsizcysfr/image/upload/v1769354991/Listen_Audio_Quran_20260125_205534_0000_bzdnqp.png"
-            alt="listen-quran"
-            className="listen-quran-img"
-          />
-        </div>
-
-        <div className="card prayer-card">
+        {/* <div className="card prayer-card">
           <div className="card-header">
             <span className="card-icon">🕌</span>
             <div className="card-title-group">
@@ -184,10 +185,10 @@ const IslamicHome = () => {
             </div>
             <span className="card-arrow">→</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Qibla Compass Card */}
-        <div className="card qibla-card">
+        {/* <div className="card qibla-card">
           <div className="card-header">
             <span className="card-icon">🧭</span>
             <div className="card-title-group">
@@ -200,10 +201,10 @@ const IslamicHome = () => {
             <span className="location-icon">📍</span>
             <span className="location-text">Rajshahi, Bangladesh</span>
           </div>
-        </div>
+        </div> */}
 
         {/* AI Quran Card */}
-        <div className="card quran-card">
+        {/* <div className="card quran-card">
           <div className="card-header">
             <span className="card-icon">📖</span>
             <div className="card-title-group">
@@ -212,10 +213,10 @@ const IslamicHome = () => {
             </div>
             <span className="card-arrow">→</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Time & Location Section */}
-        <div className="time-location-section">
+        {/* <div className="time-location-section">
           <div className="time-display">
             <span className="time-icon">🕒</span>
             <div className="time-content">
@@ -227,7 +228,7 @@ const IslamicHome = () => {
             <span className="hijri-icon">🌙</span>
             <span className="hijri-text">15 Ramadan 1445</span>
           </div>
-        </div>
+        </div> */}
       </main>
 
       {/* Bottom Navigation */}
@@ -291,7 +292,7 @@ const IslamicHome = () => {
       </nav>
 
       {/* Footer */}
-      <footer className="app-footer">
+      {/* <footer className="app-footer">
         <div className="footer-content">
           <div className="branding">
             <span className="brand-icon">☪️</span>
@@ -303,7 +304,7 @@ const IslamicHome = () => {
           </div>
           <p className="tagline">Your daily companion for spiritual growth</p>
         </div>
-      </footer>
+      </footer> */}
 
       <QiblaCompass />
     </div>
